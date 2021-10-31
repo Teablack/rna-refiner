@@ -1,8 +1,7 @@
 package com.put.rnarefiner.taskmeta;
 
-import com.put.rnarefiner.persistence.task.TaskRepository;
 import com.put.rnarefiner.persistence.task.Task;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.put.rnarefiner.persistence.task.TaskRepository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,8 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TaskMetaController {
 
-    @Autowired
-    TaskRepository taskRepository;
+    final TaskRepository taskRepository;
+
+    public TaskMetaController(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+    }
 
     @PostMapping(value = "/api/email", consumes = "application/json", produces = "application/json")
     public TaskMeta postTaskMeta(@RequestBody TaskMeta taskMeta) {

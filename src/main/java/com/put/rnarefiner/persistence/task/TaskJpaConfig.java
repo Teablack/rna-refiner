@@ -12,7 +12,7 @@ import javax.sql.DataSource;
 import java.util.Objects;
 
 @Configuration
-@EnableJpaRepositories(repositoryBaseClass = TaskRepository.class)
+@EnableJpaRepositories(basePackageClasses = TaskRepository.class)
 @PropertySource(value = "persistence-task.properties", ignoreResourceNotFound = true)
 @EnableTransactionManagement
 public class TaskJpaConfig {
