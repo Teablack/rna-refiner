@@ -1,4 +1,4 @@
-package com.put.rnarefiner.configuration;
+package com.put.rnarefiner.persistence.task;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +12,7 @@ import javax.sql.DataSource;
 import java.util.Objects;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "com.put.rnarefiner.persistence.dao")
+@EnableJpaRepositories(repositoryBaseClass = TaskRepository.class)
 @PropertySource(value = "persistence-task.properties", ignoreResourceNotFound = true)
 @EnableTransactionManagement
 public class TaskJpaConfig {

@@ -1,4 +1,4 @@
-package com.put.rnarefiner.persistence.entity;
+package com.put.rnarefiner.persistence.task;
 
 import com.put.rnarefiner.enums.Status;
 import lombok.*;

@@ -1,9 +1,8 @@
-package com.put.rnarefiner.controller;
+package com.put.rnarefiner.taskmeta;
 
-import com.put.rnarefiner.persistence.dao.TaskRepository;
-import com.put.rnarefiner.persistence.entity.Task;
-import com.put.rnarefiner.taskmeta.TaskMeta;
-import org.json.JSONException;
+import com.put.rnarefiner.persistence.task.TaskRepository;
+import com.put.rnarefiner.persistence.task.Task;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +11,13 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 
 import javax.annotation.Resource;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class RnaRefinerControllerTest {
+class TaskMetaControllerTest {
 
     @LocalServerPort
     private int port;
@@ -31,42 +31,43 @@ class RnaRefinerControllerTest {
     private String addressTemplate;
 
     @BeforeEach
-    private void setup() {
+    private void reload() {
         addressTemplate = String.format("http://localhost:%d", port) + "%s";
         taskRepository.deleteAll();
     }
 
     @Test
     public void postTaskMetaWithNullEmailAndReturnSameMetaWithUUID() {
-        String address = String.format(addressTemplate, "/api/email");
         TaskMeta requestedTaskMeta = new TaskMeta(null, null);
+        String address = String.format(addressTemplate, "/api/email");
 
         TaskMeta actualTaskMeta = this.restTemplate.postForObject(address, requestedTaskMeta, TaskMeta.class);
+
         assertNotNull(actualTaskMeta.getUuid());
     }
 
     @Test
     public void postTaskMetaWithEmailAndReturnSameMetaWithUUID() {
-        String address = String.format(addressTemplate, "/api/email");
-
         String email = "john.smith@email.com";
         TaskMeta requestedTaskMeta = new TaskMeta(null, email);
+        String address = String.format(addressTemplate, "/api/email");
 
         TaskMeta actualTaskMeta = this.restTemplate.postForObject(address, requestedTaskMeta, TaskMeta.class);
+
         assertEquals(email, actualTaskMeta.getEmail());
         assertNotNull(actualTaskMeta.getUuid());
     }
 
     @Test
     public void postTaskMetaWithEmailAndAddItToDatabaseAndReturnSameUuidAsInTheDatabase() {
-        String address = String.format(addressTemplate, "/api/email");
-
         String email = "john.smith@email.com";
         TaskMeta requestedTaskMeta = new TaskMeta(null, email);
+        String address = String.format(addressTemplate, "/api/email");
 
         TaskMeta actualTaskMeta = this.restTemplate.postForObject(address, requestedTaskMeta, TaskMeta.class);
-
         Task addedTaskToDB = taskRepository.findAll().iterator().next();
+
         assertEquals(addedTaskToDB.getId(), actualTaskMeta.getUuid());
     }
+
 }
