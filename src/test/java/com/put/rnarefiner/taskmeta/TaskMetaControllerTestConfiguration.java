@@ -3,18 +3,23 @@ package com.put.rnarefiner.taskmeta;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 
+import javax.annotation.PostConstruct;
+
+@Lazy
 @TestConfiguration
 public class TaskMetaControllerTestConfiguration {
 
     @LocalServerPort
     private int port;
 
-    final String addressApiEmail;
-    final TaskMeta taskMetaNullEmail;
-    final TaskMeta taskMetaNotNullEmail;
+    private String addressApiEmail;
+    private TaskMeta taskMetaNullEmail;
+    private TaskMeta taskMetaNotNullEmail;
 
-    public TaskMetaControllerTestConfiguration() {
+    @PostConstruct
+    public void setup() {
         String addressTemplate = String.format("http://localhost:%d", port) + "%s";
 
         addressApiEmail = String.format(addressTemplate, "/api/email");
@@ -29,7 +34,7 @@ public class TaskMetaControllerTestConfiguration {
     }
 
     @Bean TaskMeta taskMetaNullEmail() {
-        return taskMetaNotNullEmail;
+        return taskMetaNullEmail;
     }
 
     @Bean TaskMeta taskMetaNotNullEmail() {
@@ -37,3 +42,6 @@ public class TaskMetaControllerTestConfiguration {
     }
 
 }
+
+
+
